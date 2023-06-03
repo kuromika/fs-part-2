@@ -19,16 +19,28 @@ const App = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (persons.find((person) => person.name === newName)) {
-      alert(`${newName} is already added to the phonebook`);
-      return;
+    const oldPerson = persons.find((person) => person.name === newName);
+    if (oldPerson) {
+      const confirmation = window.confirm
+        (`${newName} is already in the phone book, replace old number with new one?`);
+      if (!confirmation) {
+        return;
+      }
+      updatePerson(oldPerson.id, {
+        ...oldPerson,
+        number: newNumber
+      }).then((response) => {
+        setPersons(persons.map((person) => person.id === response.data.id ? response.data : person))
+      })
+    } else {
+        createPerson({
+        name: newName,
+        number: newNumber
+      }).then((response) => {
+        setPersons([...persons, response.data]);
+      })
     }
-    createPerson({
-      name: newName,
-      number: newNumber
-    }).then((response) => {
-      setPersons([...persons, response.data]);
-    })
+    
     setNewName('');
     setNewNumber('');
   }
