@@ -8,6 +8,7 @@ const Course = ({ course }) => {
       {course.parts.map((part) => {
         return(<Part name={part.name} key={part.id} exercises={part.exercises}></Part>)
       })}
+      <Total parts={course.parts}></Total>
     </div>
   )
 }
@@ -20,6 +21,12 @@ const Part = ({ name, exercises }) => {
   return (
     <p>{name} {exercises}</p>
   )
+}
+
+const Total = ({ parts }) => {
+  return <p>{parts.reduce((accumulator, current) => {
+    return accumulator + current.exercises;
+  }, 0 )}</p>
 }
 
 
