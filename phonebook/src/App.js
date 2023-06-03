@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Form } from './components/Form'
 import { Filter } from './components/Filter'
 import { Persons } from './components/Persons'
-import {createPerson, updatePerson, getAll} from './services/persons'
+import {createPerson, updatePerson, getAll, deletePerson} from './services/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -15,7 +15,7 @@ const App = () => {
       setPersons(response.data);
     })
   }, [])
-  
+
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -45,6 +45,17 @@ const App = () => {
     setFilter(event.target.value);
   }
 
+  const handlePersonDelete = (id) => {
+    const person = persons.find((person) => person.id === id);
+    const confirmation = window.confirm(`Delete ${person.name}?`);
+    if (!confirmation) {
+      return;
+    }
+    deletePerson(id).then((response) => {
+      setPersons([...persons.filter((person) => person.id !== id)]);
+    })
+  }
+
   const filteredPersons = persons.filter((person) => person.name.toLowerCase().includes(filter.toLowerCase()));
 
   return (
@@ -56,7 +67,9 @@ const App = () => {
         handleNumberInput={handleNumberInput} newName={newName} newNumber={newNumber}>
       </Form>
       <h2>Numbers</h2>
-      <Persons persons={filteredPersons}></Persons>
+      <Persons persons={filteredPersons}
+        handleDelete={handlePersonDelete}
+      ></Persons>
     </div>
   )
 }

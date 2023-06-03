@@ -13,3 +13,7 @@ export const updatePerson = (id, newPerson) => {
 export const createPerson = (newPerson) => {
   return axios.post(baseURL, newPerson);
 }
+
+export const deletePerson = (id) => {
+  return axios.delete(`${baseURL}/${id}`);
+}
