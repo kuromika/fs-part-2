@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Form } from './components/Form'
 import { Filter } from './components/Filter'
 import { Persons } from './components/Persons'
-import axios from 'axios';
+import {createPerson, updatePerson, getAll} from './services/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -11,10 +11,9 @@ const App = () => {
   const [filter, setFilter] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:3001/persons')
-      .then((response) => {
-        setPersons(response.data)
-      });
+    getAll().then((response) => {
+      setPersons(response.data);
+    })
   }, [])
 
   const handleSubmit = (event) => {
@@ -23,10 +22,12 @@ const App = () => {
       alert(`${newName} is already added to the phonebook`);
       return;
     }
-    setPersons(persons.concat({
+    createPerson({
       name: newName,
       number: newNumber
-    }));
+    }).then((response) => {
+      setPersons([...persons, response.data]);
+    })
     setNewName('');
     setNewNumber('');
   }
