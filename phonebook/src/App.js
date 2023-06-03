@@ -3,12 +3,14 @@ import { Form } from './components/Form'
 import { Filter } from './components/Filter'
 import { Persons } from './components/Persons'
 import {createPerson, updatePerson, getAll, deletePerson} from './services/persons'
+import { Notification } from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('');
+  const [notification, setNotification] = useState('');
 
   useEffect(() => {
     getAll().then((response) => {
@@ -32,6 +34,10 @@ const App = () => {
       }).then((response) => {
         setPersons(persons.map((person) => person.id === response.data.id ? response.data : person))
       })
+      setNotification(`Updated ${oldPerson.name}`)
+      setTimeout(() => {
+        setNotification('');
+      }, 2000)
     } else {
         createPerson({
         name: newName,
@@ -39,6 +45,11 @@ const App = () => {
       }).then((response) => {
         setPersons([...persons, response.data]);
       })
+      setNotification(`Added ${newName}`)
+      setTimeout(() => {
+        setNotification('');
+      }, 2000)
+      
     }
     
     setNewName('');
@@ -73,6 +84,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notification}></Notification>
       <Filter filter={filter} handleFilterInput={handleFilterInput}></Filter>
       <h2>add a new</h2>
       <Form handleSubmit={handleSubmit} handleNameInput={handleNameInput}
