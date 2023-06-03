@@ -10,7 +10,10 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('');
-  const [notification, setNotification] = useState('');
+  const [notification, setNotification] = useState({
+    message: '',
+    type: ''
+  });
 
   useEffect(() => {
     getAll().then((response) => {
@@ -33,11 +36,17 @@ const App = () => {
         number: newNumber
       }).then((response) => {
         setPersons(persons.map((person) => person.id === response.data.id ? response.data : person))
+        setNotification({
+          message: `Updated ${oldPerson.name}`,
+          type: 'success'
+        })
+      }).catch((err) => {
+        setNotification({
+          message: `Information of ${oldPerson.name} has already been removed from the server`,
+          type: 'error'
+        })
       })
-      setNotification(`Updated ${oldPerson.name}`)
-      setTimeout(() => {
-        setNotification('');
-      }, 2000)
+      
     } else {
         createPerson({
         name: newName,
@@ -45,12 +54,19 @@ const App = () => {
       }).then((response) => {
         setPersons([...persons, response.data]);
       })
-      setNotification(`Added ${newName}`)
-      setTimeout(() => {
-        setNotification('');
-      }, 2000)
-      
+      setNotification({
+        message: `Added ${newName}`,
+        type: 'success'
+      })
+
     }
+
+    setTimeout(() => {
+        setNotification({
+          message: '',
+          type: ''
+        });
+      }, 2000)
     
     setNewName('');
     setNewNumber('');
@@ -75,7 +91,18 @@ const App = () => {
       return;
     }
     deletePerson(id).then((response) => {
-      setPersons([...persons.filter((person) => person.id !== id)]);
+      setPersons([...persons.filter((p) => p.id !== id)]);
+    }).catch((err) => {
+      setNotification({
+        message: `Information of ${person.name} has already been removed from the server`,
+        type: 'error'
+      })
+      setTimeout(() => {
+        setNotification({
+          message: '',
+          type: ''
+        });
+      }, 2000)
     })
   }
 
@@ -84,7 +111,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={notification}></Notification>
+      <Notification notification={notification}></Notification>
       <Filter filter={filter} handleFilterInput={handleFilterInput}></Filter>
       <h2>add a new</h2>
       <Form handleSubmit={handleSubmit} handleNameInput={handleNameInput}

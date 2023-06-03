@@ -1,11 +1,11 @@
 
-export const Notification = ({ message }) => {
+export const Notification = ({ notification }) => {
   
-  if (!message) {
+  if (!notification.message) {
     return null;
   }
 
   return (
-    <p className="notification">{message}</p>
+    <p className={`notification ${notification.type}`}>{notification.message}</p>
   )
 }

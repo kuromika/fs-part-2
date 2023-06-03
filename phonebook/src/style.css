@@ -1,9 +1,17 @@
 
 .notification{
-  color: green;
   padding: 1rem;
-  border: green 0.5rem solid;
   background-color: lightgray;
   border-radius: 1rem;
   font-size: 1.5rem;
+}
+
+.notification.success{
+    border: green 0.5rem solid;
+    color: green;
+}
+
+.notification.error{
+  border: red 0.5rem solid;
+  color: red;
 }
