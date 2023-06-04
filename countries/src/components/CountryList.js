@@ -18,7 +18,7 @@ export const CountryList = ({ countries }) => {
   return (
     <div>
       {countries.map((country) => {
-        return <ControlledCountry country={country}></ControlledCountry>
+        return <ControlledCountry key={country.name.common + country.area} country={country}></ControlledCountry>
       })}
     </div>
   )
