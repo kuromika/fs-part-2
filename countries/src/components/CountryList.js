@@ -1,3 +1,4 @@
+import { ControlledCountry } from "./ControlledCountry";
 import { CountryInfo } from "./CountryInfo";
 
 export const CountryList = ({ countries }) => {
@@ -17,7 +18,7 @@ export const CountryList = ({ countries }) => {
   return (
     <div>
       {countries.map((country) => {
-        return <p key={country.name.common}>{country.name.common}</p>
+        return <ControlledCountry country={country}></ControlledCountry>
       })}
     </div>
   )
